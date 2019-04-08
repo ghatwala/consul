@@ -25,7 +25,7 @@ var clientACLCacheConfig *structs.ACLCachesConfig = &structs.ACLCachesConfig{
 	ParsedPolicies: 128,
 	// Authorizers - number of compiled multi-policy effective policies that can be cached
 	Authorizers: 256,
-	// Roles - number of unparsed ACL roles that can be cached
+	// Roles - number of ACL roles that can be cached
 	Roles: 128,
 }
 
