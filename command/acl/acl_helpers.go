@@ -167,14 +167,14 @@ func PrintIdentityProvider(idp *api.ACLIdentityProvider, ui cli.Ui, showMeta boo
 	}
 	if idp.Type == "kubernetes" {
 		ui.Info(fmt.Sprintf("Kubernetes:"))
-		ui.Info(fmt.Sprintf("  Host: %s", idp.KubernetesHost))
-		ui.Info(fmt.Sprintf("  CA Cert:"))
+		ui.Info(fmt.Sprintf("   Host: %s", idp.KubernetesHost))
+		ui.Info(fmt.Sprintf("   CA Cert:"))
 		if idp.KubernetesCACert != "" {
-			ui.Info(fmt.Sprintf("    %s", idp.KubernetesCACert))
+			ui.Info(fmt.Sprintf("      %s", idp.KubernetesCACert))
 		}
-		ui.Info(fmt.Sprintf("  Service Account JWT:"))
+		ui.Info(fmt.Sprintf("   Service Account JWT:"))
 		if idp.KubernetesServiceAccountJWT != "" {
-			ui.Info(fmt.Sprintf("    %s", idp.KubernetesServiceAccountJWT))
+			ui.Info(fmt.Sprintf("      %s", idp.KubernetesServiceAccountJWT))
 		}
 	}
 }
@@ -188,8 +188,8 @@ func PrintIdentityProviderListEntry(idp *api.ACLIdentityProviderListEntry, ui cl
 		ui.Info(fmt.Sprintf("   Modify Index: %d", idp.ModifyIndex))
 	}
 	if idp.Type == "kubernetes" {
-		ui.Info(fmt.Sprintf("Kubernetes:"))
-		ui.Info(fmt.Sprintf("  Host: %s", idp.KubernetesHost))
+		ui.Info(fmt.Sprintf("   Kubernetes:"))
+		ui.Info(fmt.Sprintf("      Host: %s", idp.KubernetesHost))
 	}
 }
 
@@ -205,9 +205,28 @@ func PrintRoleBindingRule(rule *api.ACLRoleBindingRule, ui cli.Ui, showMeta bool
 	}
 	ui.Info(fmt.Sprintf("Match:"))
 	for i, match := range rule.Match {
-		ui.Info(fmt.Sprintf("  %d:", i))
+		ui.Info(fmt.Sprintf("   %d:", i))
 		for _, sel := range match.Selector {
-			ui.Info(fmt.Sprintf("     %s", sel))
+			ui.Info(fmt.Sprintf("      %s", sel))
+		}
+	}
+}
+
+func PrintRoleBindingRuleListEntry(rule *api.ACLRoleBindingRule, ui cli.Ui, showMeta bool) {
+	ui.Info(fmt.Sprintf("%s:", rule.ID))
+	ui.Info(fmt.Sprintf("   IDPName:      %s", rule.IDPName))
+	ui.Info(fmt.Sprintf("   Description:  %s", rule.Description))
+	ui.Info(fmt.Sprintf("   RoleName:     %s", rule.RoleName))
+	ui.Info(fmt.Sprintf("   MustExist:    %v", rule.MustExist))
+	if showMeta {
+		ui.Info(fmt.Sprintf("   Create Index: %d", rule.CreateIndex))
+		ui.Info(fmt.Sprintf("   Modify Index: %d", rule.ModifyIndex))
+	}
+	ui.Info(fmt.Sprintf("   Match:"))
+	for i, match := range rule.Match {
+		ui.Info(fmt.Sprintf("      %d:", i))
+		for _, sel := range match.Selector {
+			ui.Info(fmt.Sprintf("         %s", sel))
 		}
 	}
 }

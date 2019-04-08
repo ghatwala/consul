@@ -68,7 +68,7 @@ func (c *cmd) Run(args []string) int {
 	}
 
 	for _, rule := range rules {
-		acl.PrintRoleBindingRule(rule, c.UI, c.showMeta)
+		acl.PrintRoleBindingRuleListEntry(rule, c.UI, c.showMeta)
 	}
 
 	return 0
