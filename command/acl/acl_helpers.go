@@ -126,7 +126,7 @@ func PrintRole(role *api.ACLRole, ui cli.Ui, showMeta bool) {
 	}
 }
 
-func PrintRoleListEntry(role *api.ACLRoleListEntry, ui cli.Ui, showMeta bool) {
+func PrintRoleListEntry(role *api.ACLRole, ui cli.Ui, showMeta bool) {
 	ui.Info(fmt.Sprintf("%s:", role.Name))
 	ui.Info(fmt.Sprintf("   ID:           %s", role.ID))
 	ui.Info(fmt.Sprintf("   Description:  %s", role.Description))
@@ -135,16 +135,16 @@ func PrintRoleListEntry(role *api.ACLRoleListEntry, ui cli.Ui, showMeta bool) {
 		ui.Info(fmt.Sprintf("   Create Index: %d", role.CreateIndex))
 		ui.Info(fmt.Sprintf("   Modify Index: %d", role.ModifyIndex))
 	}
-	ui.Info(fmt.Sprintf("Policies:"))
+	ui.Info(fmt.Sprintf("   Policies:"))
 	for _, policy := range role.Policies {
-		ui.Info(fmt.Sprintf("   %s - %s", policy.ID, policy.Name))
+		ui.Info(fmt.Sprintf("      %s - %s", policy.ID, policy.Name))
 	}
-	ui.Info(fmt.Sprintf("Service Identities:"))
+	ui.Info(fmt.Sprintf("   Service Identities:"))
 	for _, svcid := range role.ServiceIdentities {
 		if len(svcid.Datacenters) > 0 {
-			ui.Info(fmt.Sprintf("   %s (Datacenters: %s)", svcid.ServiceName, strings.Join(svcid.Datacenters, ", ")))
+			ui.Info(fmt.Sprintf("      %s (Datacenters: %s)", svcid.ServiceName, strings.Join(svcid.Datacenters, ", ")))
 		} else {
-			ui.Info(fmt.Sprintf("   %s (Datacenters: all)", svcid.ServiceName))
+			ui.Info(fmt.Sprintf("      %s (Datacenters: all)", svcid.ServiceName))
 		}
 	}
 }

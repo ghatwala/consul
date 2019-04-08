@@ -132,17 +132,6 @@ type ACLRole struct {
 	ModifyIndex       uint64
 }
 
-type ACLRoleListEntry struct {
-	ID                string
-	Name              string
-	Description       string
-	Policies          []*ACLRolePolicyLink  `json:",omitempty"`
-	ServiceIdentities []*ACLServiceIdentity `json:",omitempty"`
-	Hash              []byte
-	CreateIndex       uint64
-	ModifyIndex       uint64
-}
-
 // ACL can be used to query the ACL endpoints
 type ACL struct {
 	c *Client
@@ -755,7 +744,7 @@ func (a *ACL) RoleReadByName(roleName string, q *QueryOptions) (*ACLRole, *Query
 // RoleList retrieves a listing of all roles. The listing does not include some
 // metadata for the role as those should be retrieved by subsequent calls to
 // RoleRead.
-func (a *ACL) RoleList(q *QueryOptions) ([]*ACLRoleListEntry, *QueryMeta, error) {
+func (a *ACL) RoleList(q *QueryOptions) ([]*ACLRole, *QueryMeta, error) {
 	r := a.c.newRequest("GET", "/v1/acl/roles")
 	r.setQueryOptions(q)
 	rtt, resp, err := requireOK(a.c.doRequest(r))
@@ -768,7 +757,7 @@ func (a *ACL) RoleList(q *QueryOptions) ([]*ACLRoleListEntry, *QueryMeta, error)
 	parseQueryMeta(resp, qm)
 	qm.RequestTime = rtt
 
-	var entries []*ACLRoleListEntry
+	var entries []*ACLRole
 	if err := decodeBody(resp, &entries); err != nil {
 		return nil, nil, err
 	}

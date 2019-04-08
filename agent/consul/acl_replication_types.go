@@ -238,7 +238,7 @@ func (r *aclPolicyReplicator) UpdateLocalBatch(ctx context.Context, srv *Server,
 
 type aclRoleReplicator struct {
 	local   structs.ACLRoles
-	remote  structs.ACLRoleListStubs
+	remote  structs.ACLRoles
 	updated []*structs.ACLRole
 }
 

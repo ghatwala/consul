@@ -575,7 +575,7 @@ func (s *HTTPServer) ACLRoleList(resp http.ResponseWriter, req *http.Request) (i
 
 	// make sure we return an array and not nil
 	if out.Roles == nil {
-		out.Roles = make(structs.ACLRoleListStubs, 0)
+		out.Roles = make(structs.ACLRoles, 0)
 	}
 
 	return out.Roles, nil

@@ -1363,12 +1363,7 @@ func (a *ACL) RoleList(args *structs.ACLRoleListRequest, reply *structs.ACLRoleL
 				return err
 			}
 
-			var stubs structs.ACLRoleListStubs
-			for _, role := range roles {
-				stubs = append(stubs, role.Stub())
-			}
-
-			reply.Index, reply.Roles = index, stubs
+			reply.Index, reply.Roles = index, roles
 			return nil
 		})
 }

@@ -681,32 +681,7 @@ func (policies ACLPolicies) Merge(cache *ACLCaches, sentinel sentinel.Evaluator)
 	return acl.MergePolicies(parsed), nil
 }
 
-type ACLRoleListStub struct {
-	ID                string
-	Name              string
-	Description       string
-	Policies          []ACLRolePolicyLink   `json:",omitempty"`
-	ServiceIdentities []*ACLServiceIdentity `json:",omitempty"`
-	Hash              []byte
-	CreateIndex       uint64
-	ModifyIndex       uint64
-}
-
-func (r *ACLRole) Stub() *ACLRoleListStub {
-	return &ACLRoleListStub{
-		ID:                r.ID,
-		Name:              r.Name,
-		Description:       r.Description,
-		Policies:          r.Policies,
-		ServiceIdentities: r.ServiceIdentities,
-		Hash:              r.Hash,
-		CreateIndex:       r.CreateIndex,
-		ModifyIndex:       r.ModifyIndex,
-	}
-}
-
 type ACLRoles []*ACLRole
-type ACLRoleListStubs []*ACLRoleListStub
 
 // HashKey returns a consistent hash for a set of roles.
 func (roles ACLRoles) HashKey() string {
@@ -724,12 +699,6 @@ func (roles ACLRoles) HashKey() string {
 }
 
 func (roles ACLRoles) Sort() {
-	sort.Slice(roles, func(i, j int) bool {
-		return roles[i].ID < roles[j].ID
-	})
-}
-
-func (roles ACLRoleListStubs) Sort() {
 	sort.Slice(roles, func(i, j int) bool {
 		return roles[i].ID < roles[j].ID
 	})
@@ -1135,7 +1104,7 @@ func (r *ACLRoleListRequest) RequestDatacenter() string {
 }
 
 type ACLRoleListResponse struct {
-	Roles ACLRoleListStubs
+	Roles ACLRoles
 	QueryMeta
 }
 
