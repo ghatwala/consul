@@ -2,6 +2,7 @@ package consul
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hashicorp/consul/agent/structs"
 )
@@ -291,11 +292,35 @@ func (r *aclRoleReplicator) FetchUpdated(srv *Server, updates []string) (int, er
 	r.updated = nil
 
 	if len(updates) > 0 {
-		roles, err := srv.fetchACLRolesBatch(updates)
-		if err != nil {
-			return 0, err
+		// Since ACLRoles do not have a "list entry" variation, all of the data
+		// to replicate a role is already present in the "r.remote" list.
+		//
+		// We avoid a second query by just repurposing the data we already have
+		// access to in a way that is compatible with the generic ACL type
+		// replicator.
+		keep := make(map[string]struct{})
+		for _, id := range updates {
+			keep[id] = struct{}{}
 		}
-		r.updated = roles.Roles
+
+		subset := make([]*structs.ACLRole, 0, len(updates))
+		for _, role := range r.remote {
+			if _, ok := keep[role.ID]; ok {
+				subset = append(subset, role)
+			}
+		}
+
+		if len(subset) != len(keep) { // only possible via programming bug
+			for _, role := range subset {
+				delete(keep, role.ID)
+			}
+			missing := make([]string, 0, len(keep))
+			for id, _ := range keep {
+				missing = append(missing, id)
+			}
+			return 0, fmt.Errorf("role replication trying to replicated uncached roles with IDs: %v", missing)
+		}
+		r.updated = subset
 	}
 
 	return len(r.updated), nil
