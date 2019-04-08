@@ -4270,7 +4270,7 @@ func gatherIDs(t *testing.T, v interface{}) []string {
 		for _, r := range x {
 			out = append(out, r.ID)
 		}
-	case structs.ACLRoleListStubs:
+	case structs.ACLRoles:
 		for _, r := range x {
 			out = append(out, r.ID)
 		}
