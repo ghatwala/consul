@@ -203,8 +203,8 @@ func PrintRoleBindingRule(rule *api.ACLRoleBindingRule, ui cli.Ui, showMeta bool
 		ui.Info(fmt.Sprintf("Create Index: %d", rule.CreateIndex))
 		ui.Info(fmt.Sprintf("Modify Index: %d", rule.ModifyIndex))
 	}
-	ui.Info(fmt.Sprintf("Match:"))
-	for i, match := range rule.Match {
+	ui.Info(fmt.Sprintf("Matches:"))
+	for i, match := range rule.Matches {
 		ui.Info(fmt.Sprintf("   %d:", i))
 		for _, sel := range match.Selector {
 			ui.Info(fmt.Sprintf("      %s", sel))
@@ -222,8 +222,8 @@ func PrintRoleBindingRuleListEntry(rule *api.ACLRoleBindingRule, ui cli.Ui, show
 		ui.Info(fmt.Sprintf("   Create Index: %d", rule.CreateIndex))
 		ui.Info(fmt.Sprintf("   Modify Index: %d", rule.ModifyIndex))
 	}
-	ui.Info(fmt.Sprintf("   Match:"))
-	for i, match := range rule.Match {
+	ui.Info(fmt.Sprintf("   Matches:"))
+	for i, match := range rule.Matches {
 		ui.Info(fmt.Sprintf("      %d:", i))
 		for _, sel := range match.Selector {
 			ui.Info(fmt.Sprintf("         %s", sel))

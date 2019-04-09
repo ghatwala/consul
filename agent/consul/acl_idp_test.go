@@ -49,12 +49,12 @@ func TestDoesRoleBindingRuleMatch(t *testing.T) {
 	} {
 		var rule structs.ACLRoleBindingRule
 		if len(test.match1) > 0 {
-			rule.Match = append(rule.Match, &structs.ACLRoleBindingRuleMatch{
+			rule.Matches = append(rule.Matches, &structs.ACLRoleBindingRuleMatch{
 				Selector: test.match1,
 			})
 		}
 		if len(test.match2) > 0 {
-			rule.Match = append(rule.Match, &structs.ACLRoleBindingRuleMatch{
+			rule.Matches = append(rule.Matches, &structs.ACLRoleBindingRuleMatch{
 				Selector: test.match2,
 			})
 		}

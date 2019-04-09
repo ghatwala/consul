@@ -3285,7 +3285,7 @@ func TestACLEndpoint_RoleBindingRuleSet(t *testing.T) {
 		return structs.ACLRoleBindingRule{
 			Description: "foobar",
 			IDPName:     testIDP.Name,
-			Match: []*structs.ACLRoleBindingRuleMatch{
+			Matches: []*structs.ACLRoleBindingRuleMatch{
 				&structs.ACLRoleBindingRuleMatch{
 					Selector: []string{
 						"serviceaccount.name=abc",
@@ -3344,9 +3344,9 @@ func TestACLEndpoint_RoleBindingRuleSet(t *testing.T) {
 		require.NotEmpty(t, rule.ID)
 		require.Equal(t, rule.Description, "foobar")
 		require.Equal(t, rule.IDPName, testIDP.Name)
-		require.Len(t, rule.Match, 1)
-		require.Len(t, rule.Match[0].Selector, 1)
-		require.Equal(t, "serviceaccount.name=abc", rule.Match[0].Selector[0])
+		require.Len(t, rule.Matches, 1)
+		require.Len(t, rule.Matches[0].Selector, 1)
+		require.Equal(t, "serviceaccount.name=abc", rule.Matches[0].Selector[0])
 		require.Equal(t, "abc", rule.RoleName)
 		require.False(t, rule.MustExist)
 
@@ -3364,7 +3364,7 @@ func TestACLEndpoint_RoleBindingRuleSet(t *testing.T) {
 		reqRule := newRule()
 		reqRule.ID = ruleID
 		reqRule.Description = "foobar modified"
-		reqRule.Match = []*structs.ACLRoleBindingRuleMatch{
+		reqRule.Matches = []*structs.ACLRoleBindingRuleMatch{
 			&structs.ACLRoleBindingRuleMatch{
 				Selector: []string{
 					"serviceaccount.namespace=def",
@@ -3393,9 +3393,9 @@ func TestACLEndpoint_RoleBindingRuleSet(t *testing.T) {
 		require.NotEmpty(t, rule.ID)
 		require.Equal(t, rule.Description, "foobar modified")
 		require.Equal(t, rule.IDPName, testIDP.Name)
-		require.Len(t, rule.Match, 1)
-		require.Len(t, rule.Match[0].Selector, 1)
-		require.Equal(t, "serviceaccount.namespace=def", rule.Match[0].Selector[0])
+		require.Len(t, rule.Matches, 1)
+		require.Len(t, rule.Matches[0].Selector, 1)
+		require.Equal(t, "serviceaccount.namespace=def", rule.Matches[0].Selector[0])
 		require.Equal(t, "def", rule.RoleName)
 		require.True(t, rule.MustExist)
 	})
@@ -3414,16 +3414,16 @@ func TestACLEndpoint_RoleBindingRuleSet(t *testing.T) {
 
 	t.Run("Create with no explicit matches", func(t *testing.T) {
 		reqRule := newRule()
-		reqRule.Match = nil
+		reqRule.Matches = nil
 
 		rule := requireOK(t, reqRule)
-		require.Len(t, rule.Match, 0)
+		require.Len(t, rule.Matches, 0)
 	})
 
 	t.Run("Create fails; match contains no selector", func(t *testing.T) {
 		// If you don't want any selectors you should not provide any match.
 		reqRule := newRule()
-		reqRule.Match = []*structs.ACLRoleBindingRuleMatch{
+		reqRule.Matches = []*structs.ACLRoleBindingRuleMatch{
 			&structs.ACLRoleBindingRuleMatch{
 				Selector: nil,
 			},
@@ -3433,7 +3433,7 @@ func TestACLEndpoint_RoleBindingRuleSet(t *testing.T) {
 
 	t.Run("Create fails; match selector reuses vars", func(t *testing.T) {
 		reqRule := newRule()
-		reqRule.Match = []*structs.ACLRoleBindingRuleMatch{
+		reqRule.Matches = []*structs.ACLRoleBindingRuleMatch{
 			&structs.ACLRoleBindingRuleMatch{
 				Selector: []string{
 					"serviceaccount.name=a",
@@ -3446,7 +3446,7 @@ func TestACLEndpoint_RoleBindingRuleSet(t *testing.T) {
 
 	t.Run("Create fails; match selector with unknown vars", func(t *testing.T) {
 		reqRule := newRule()
-		reqRule.Match = []*structs.ACLRoleBindingRuleMatch{
+		reqRule.Matches = []*structs.ACLRoleBindingRuleMatch{
 			&structs.ACLRoleBindingRuleMatch{
 				Selector: []string{
 					"serviceaccount.name=a",
@@ -3459,7 +3459,7 @@ func TestACLEndpoint_RoleBindingRuleSet(t *testing.T) {
 
 	t.Run("Create fails; match selector invalid", func(t *testing.T) {
 		reqRule := newRule()
-		reqRule.Match = []*structs.ACLRoleBindingRuleMatch{
+		reqRule.Matches = []*structs.ACLRoleBindingRuleMatch{
 			&structs.ACLRoleBindingRuleMatch{
 				Selector: []string{
 					"serviceaccount.name",
@@ -3946,7 +3946,7 @@ func TestACLEndpoint_Login(t *testing.T) {
 				IDPName:   ruleDB.IDPName,
 				RoleName:  ruleDB.RoleName,
 				MustExist: false,
-				Match:     nil,
+				Matches:   nil,
 			},
 			WriteRequest: structs.WriteRequest{Token: "root"},
 		}
@@ -4615,7 +4615,7 @@ func upsertTestRoleBindingRule(
 		WriteRequest: structs.WriteRequest{Token: masterToken},
 	}
 	if len(singleSelector) > 0 {
-		req.RoleBindingRule.Match = []*structs.ACLRoleBindingRuleMatch{
+		req.RoleBindingRule.Matches = []*structs.ACLRoleBindingRuleMatch{
 			&structs.ACLRoleBindingRuleMatch{
 				Selector: singleSelector,
 			},

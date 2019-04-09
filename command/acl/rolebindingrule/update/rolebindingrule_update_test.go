@@ -156,7 +156,7 @@ func TestRoleBindingRuleUpdateCommand(t *testing.T) {
 				Description: "test rule",
 				RoleName:    "k8s-{{serviceaccount.name}}",
 				MustExist:   false,
-				Match: []*api.ACLRoleBindingRuleMatch{
+				Matches: []*api.ACLRoleBindingRuleMatch{
 					&api.ACLRoleBindingRuleMatch{
 						Selector: []string{
 							"serviceaccount.namespace=default",
@@ -240,9 +240,9 @@ func TestRoleBindingRuleUpdateCommand(t *testing.T) {
 		require.Equal(t, "test rule edited", rule.Description)
 		require.Equal(t, "role-updated", rule.RoleName)
 		require.True(t, rule.MustExist)
-		require.Len(t, rule.Match, 2)
+		require.Len(t, rule.Matches, 2)
 
-		m0, m1 := rule.Match[0], rule.Match[1]
+		m0, m1 := rule.Matches[0], rule.Matches[1]
 		require.Len(t, m0.Selector, 1)
 		require.Equal(t, "serviceaccount.namespace=default", m0.Selector[0])
 		require.Len(t, m1.Selector, 2)
@@ -282,9 +282,9 @@ func TestRoleBindingRuleUpdateCommand(t *testing.T) {
 		require.Equal(t, "test rule edited", rule.Description)
 		require.Equal(t, "role-updated", rule.RoleName)
 		require.True(t, rule.MustExist)
-		require.Len(t, rule.Match, 2)
+		require.Len(t, rule.Matches, 2)
 
-		m0, m1 := rule.Match[0], rule.Match[1]
+		m0, m1 := rule.Matches[0], rule.Matches[1]
 		require.Len(t, m0.Selector, 1)
 		require.Equal(t, "serviceaccount.namespace=default", m0.Selector[0])
 		require.Len(t, m1.Selector, 2)
@@ -321,9 +321,9 @@ func TestRoleBindingRuleUpdateCommand(t *testing.T) {
 		require.Equal(t, "test rule", rule.Description)
 		require.Equal(t, "role-updated", rule.RoleName)
 		require.True(t, rule.MustExist)
-		require.Len(t, rule.Match, 2)
+		require.Len(t, rule.Matches, 2)
 
-		m0, m1 := rule.Match[0], rule.Match[1]
+		m0, m1 := rule.Matches[0], rule.Matches[1]
 		require.Len(t, m0.Selector, 1)
 		require.Equal(t, "serviceaccount.namespace=default", m0.Selector[0])
 		require.Len(t, m1.Selector, 2)
@@ -360,9 +360,9 @@ func TestRoleBindingRuleUpdateCommand(t *testing.T) {
 		require.Equal(t, "test rule edited", rule.Description)
 		require.Equal(t, "k8s-{{serviceaccount.name}}", rule.RoleName)
 		require.True(t, rule.MustExist)
-		require.Len(t, rule.Match, 2)
+		require.Len(t, rule.Matches, 2)
 
-		m0, m1 := rule.Match[0], rule.Match[1]
+		m0, m1 := rule.Matches[0], rule.Matches[1]
 		require.Len(t, m0.Selector, 1)
 		require.Equal(t, "serviceaccount.namespace=default", m0.Selector[0])
 		require.Len(t, m1.Selector, 2)
@@ -399,9 +399,9 @@ func TestRoleBindingRuleUpdateCommand(t *testing.T) {
 		require.Equal(t, "test rule edited", rule.Description)
 		require.Equal(t, "role-updated", rule.RoleName)
 		require.False(t, rule.MustExist)
-		require.Len(t, rule.Match, 2)
+		require.Len(t, rule.Matches, 2)
 
-		m0, m1 := rule.Match[0], rule.Match[1]
+		m0, m1 := rule.Matches[0], rule.Matches[1]
 		require.Len(t, m0.Selector, 1)
 		require.Equal(t, "serviceaccount.namespace=default", m0.Selector[0])
 		require.Len(t, m1.Selector, 2)
@@ -438,9 +438,9 @@ func TestRoleBindingRuleUpdateCommand(t *testing.T) {
 		require.Equal(t, "test rule edited", rule.Description)
 		require.Equal(t, "role-updated", rule.RoleName)
 		require.True(t, rule.MustExist)
-		require.Len(t, rule.Match, 1)
+		require.Len(t, rule.Matches, 1)
 
-		m0 := rule.Match[0]
+		m0 := rule.Matches[0]
 		require.Len(t, m0.Selector, 1)
 		require.Equal(t, "serviceaccount.namespace=default", m0.Selector[0])
 	})
@@ -580,7 +580,7 @@ func TestRoleBindingRuleUpdateCommand_noMerge(t *testing.T) {
 				Description: "test rule",
 				RoleName:    "k8s-{{serviceaccount.name}}",
 				MustExist:   true,
-				Match: []*api.ACLRoleBindingRuleMatch{
+				Matches: []*api.ACLRoleBindingRuleMatch{
 					&api.ACLRoleBindingRuleMatch{
 						Selector: []string{
 							"serviceaccount.namespace=default",
@@ -666,9 +666,9 @@ func TestRoleBindingRuleUpdateCommand_noMerge(t *testing.T) {
 		require.Equal(t, "test rule edited", rule.Description)
 		require.Equal(t, "role-updated", rule.RoleName)
 		require.False(t, rule.MustExist)
-		require.Len(t, rule.Match, 1)
+		require.Len(t, rule.Matches, 1)
 
-		m0 := rule.Match[0]
+		m0 := rule.Matches[0]
 		require.Len(t, m0.Selector, 2)
 		require.Equal(t, "serviceaccount.namespace=alt", m0.Selector[0])
 		require.Equal(t, "serviceaccount.name=demo", m0.Selector[1])
@@ -707,9 +707,9 @@ func TestRoleBindingRuleUpdateCommand_noMerge(t *testing.T) {
 		require.Equal(t, "test rule edited", rule.Description)
 		require.Equal(t, "role-updated", rule.RoleName)
 		require.False(t, rule.MustExist)
-		require.Len(t, rule.Match, 1)
+		require.Len(t, rule.Matches, 1)
 
-		m0 := rule.Match[0]
+		m0 := rule.Matches[0]
 		require.Len(t, m0.Selector, 2)
 		require.Equal(t, "serviceaccount.namespace=alt", m0.Selector[0])
 		require.Equal(t, "serviceaccount.name=demo", m0.Selector[1])
@@ -745,9 +745,9 @@ func TestRoleBindingRuleUpdateCommand_noMerge(t *testing.T) {
 		require.Empty(t, rule.Description)
 		require.Equal(t, "role-updated", rule.RoleName)
 		require.False(t, rule.MustExist)
-		require.Len(t, rule.Match, 1)
+		require.Len(t, rule.Matches, 1)
 
-		m0 := rule.Match[0]
+		m0 := rule.Matches[0]
 		require.Len(t, m0.Selector, 2)
 		require.Equal(t, "serviceaccount.namespace=alt", m0.Selector[0])
 		require.Equal(t, "serviceaccount.name=demo", m0.Selector[1])
@@ -803,9 +803,9 @@ func TestRoleBindingRuleUpdateCommand_noMerge(t *testing.T) {
 		require.Equal(t, "test rule edited", rule.Description)
 		require.Equal(t, "role-updated", rule.RoleName)
 		require.False(t, rule.MustExist) // reset to zero value
-		require.Len(t, rule.Match, 1)
+		require.Len(t, rule.Matches, 1)
 
-		m0 := rule.Match[0]
+		m0 := rule.Matches[0]
 		require.Len(t, m0.Selector, 2)
 		require.Equal(t, "serviceaccount.namespace=alt", m0.Selector[0])
 		require.Equal(t, "serviceaccount.name=demo", m0.Selector[1])
@@ -841,6 +841,6 @@ func TestRoleBindingRuleUpdateCommand_noMerge(t *testing.T) {
 		require.Equal(t, "test rule edited", rule.Description)
 		require.Equal(t, "role-updated", rule.RoleName)
 		require.False(t, rule.MustExist)
-		require.Len(t, rule.Match, 0)
+		require.Len(t, rule.Matches, 0)
 	})
 }

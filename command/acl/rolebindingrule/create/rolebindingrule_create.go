@@ -109,7 +109,7 @@ func (c *cmd) Run(args []string) int {
 		IDPName:     c.idpName,
 		RoleName:    c.roleName,
 		MustExist:   c.mustExist,
-		Match:       found,
+		Matches:     found,
 	}
 
 	client, err := c.http.APIClient()

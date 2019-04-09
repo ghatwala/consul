@@ -227,7 +227,7 @@ func (s *Server) evaluateRoleBindings(idpName string, validationResp *LoginValid
 }
 
 func doesRoleBindingRuleMatch(rule *structs.ACLRoleBindingRule, fields map[string]string) bool {
-	if len(rule.Match) == 0 {
+	if len(rule.Matches) == 0 {
 		return true // catch-all
 	}
 
@@ -237,7 +237,7 @@ func doesRoleBindingRuleMatch(rule *structs.ACLRoleBindingRule, fields map[strin
 
 	// Only one of these must match for it to apply.
 	ruleMatches := false
-	for _, match := range rule.Match {
+	for _, match := range rule.Matches {
 		if len(match.Selector) == 0 {
 			continue // makes no sense
 		}

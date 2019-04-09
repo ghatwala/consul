@@ -858,9 +858,9 @@ type ACLRoleBindingRule struct {
 	// applies when credentials from this provider are exchanged.
 	IDPName string
 
-	// Match is a list of matching rules. Elements logically are used as a
+	// Matches is a list of matching rules. Elements logically are used as a
 	// disjunction (OR) when matching identities presented.
-	Match []*ACLRoleBindingRuleMatch
+	Matches []*ACLRoleBindingRuleMatch
 
 	// RoleName is the named ACL Role to bind to. Can be lightly templated
 	// using {{ foo }} syntax from available field names.
@@ -897,12 +897,12 @@ type ACLRoleBindingRule struct {
 
 func (r *ACLRoleBindingRule) Clone() *ACLRoleBindingRule {
 	r2 := *r
-	r2.Match = nil
+	r2.Matches = nil
 
-	if len(r.Match) > 0 {
-		r2.Match = make([]*ACLRoleBindingRuleMatch, len(r.Match))
-		for i, v := range r.Match {
-			r2.Match[i] = v.Clone()
+	if len(r.Matches) > 0 {
+		r2.Matches = make([]*ACLRoleBindingRuleMatch, len(r.Matches))
+		for i, v := range r.Matches {
+			r2.Matches[i] = v.Clone()
 		}
 	}
 

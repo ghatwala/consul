@@ -146,7 +146,7 @@ func (c *cmd) Run(args []string) int {
 			Description: c.description,
 			RoleName:    c.roleName,
 			MustExist:   c.mustExist,
-			Match:       found,
+			Matches:     found,
 		}
 
 	} else {
@@ -163,7 +163,7 @@ func (c *cmd) Run(args []string) int {
 		}
 
 		if len(found) > 0 {
-			rule.Match = append(rule.Match, found...)
+			rule.Matches = append(rule.Matches, found...)
 		}
 	}
 

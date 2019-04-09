@@ -137,7 +137,7 @@ type ACLRoleBindingRule struct {
 	ID          string
 	Description string
 	IDPName     string
-	Match       []*ACLRoleBindingRuleMatch
+	Matches     []*ACLRoleBindingRuleMatch
 	RoleName    string
 	MustExist   bool `json:",omitempty"`
 

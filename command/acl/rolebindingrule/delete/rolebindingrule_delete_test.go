@@ -70,7 +70,7 @@ func TestRoleBindingRuleDeleteCommand(t *testing.T) {
 				Description: "test rule",
 				RoleName:    "k8s-{{serviceaccount.name}}",
 				MustExist:   false,
-				Match: []*api.ACLRoleBindingRuleMatch{
+				Matches: []*api.ACLRoleBindingRuleMatch{
 					&api.ACLRoleBindingRuleMatch{
 						Selector: []string{
 							"serviceaccount.namespace=default",

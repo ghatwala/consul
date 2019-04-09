@@ -1606,7 +1606,7 @@ func (a *ACL) RoleBindingRuleSet(args *structs.ACLRoleBindingRuleSetRequest, rep
 		}
 	}
 
-	for _, match := range rule.Match {
+	for _, match := range rule.Matches {
 		if len(match.Selector) == 0 {
 			return fmt.Errorf("Invalid Role Binding Rule: Match must have Selector set")
 		}

@@ -213,7 +213,7 @@ func TestLoginCommand(t *testing.T) {
 		_, _, err := client.ACL().RoleBindingRuleCreate(&api.ACLRoleBindingRule{
 			IDPName:  "k8s",
 			RoleName: "{{serviceaccount.name}}",
-			Match: []*api.ACLRoleBindingRuleMatch{
+			Matches: []*api.ACLRoleBindingRuleMatch{
 				&api.ACLRoleBindingRuleMatch{
 					Selector: []string{
 						"serviceaccount.namespace=default",
