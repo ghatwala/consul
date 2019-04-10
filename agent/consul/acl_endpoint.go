@@ -440,11 +440,19 @@ func (a *ACL) tokenSetInternal(args *structs.ACLTokenSetRequest, reply *structs.
 			return fmt.Errorf("cannot toggle local mode of %s", token.AccessorID)
 		}
 
-		if token.IDPName != existing.IDPName {
+		if token.IDPName == "" {
+			token.IDPName = existing.IDPName
+		} else if token.IDPName != existing.IDPName {
 			return fmt.Errorf("Cannot change IDPName of %s", token.AccessorID)
 		}
 
-		if token.ExpirationTTL != 0 || !token.ExpirationTime.Equal(existing.ExpirationTime) {
+		if token.ExpirationTTL != 0 {
+			return fmt.Errorf("Cannot change expiration time of %s", token.AccessorID)
+		}
+
+		if token.ExpirationTime.IsZero() {
+			token.ExpirationTime = existing.ExpirationTime
+		} else if !token.ExpirationTime.Equal(existing.ExpirationTime) {
 			return fmt.Errorf("Cannot change expiration time of %s", token.AccessorID)
 		}
 
@@ -1569,17 +1577,6 @@ func (a *ACL) RoleBindingRuleSet(args *structs.ACLRoleBindingRuleSetRequest, rep
 	rule := &args.RoleBindingRule
 	state := a.srv.fsm.State()
 
-	if rule.IDPName == "" {
-		return fmt.Errorf("Invalid Role Binding Rule: no IDPName is set")
-	}
-
-	_, idp, err := state.ACLIdentityProviderGetByName(nil, rule.IDPName)
-	if err != nil {
-		return fmt.Errorf("acl identity provider lookup failed: %v", err)
-	} else if idp == nil {
-		return fmt.Errorf("cannot find identity provider with name %q", rule.IDPName)
-	}
-
 	if rule.ID == "" {
 		// with no role binding rule ID one will be generated
 		var err error
@@ -1601,9 +1598,22 @@ func (a *ACL) RoleBindingRuleSet(args *structs.ACLRoleBindingRuleSetRequest, rep
 			return fmt.Errorf("cannot find role binding rule %s", rule.ID)
 		}
 
-		if existing.IDPName != rule.IDPName {
+		if rule.IDPName == "" {
+			rule.IDPName = existing.IDPName
+		} else if existing.IDPName != rule.IDPName {
 			return fmt.Errorf("the IDPName field of an Role Binding Rule is immutable")
 		}
+	}
+
+	if rule.IDPName == "" {
+		return fmt.Errorf("Invalid Role Binding Rule: no IDPName is set")
+	}
+
+	_, idp, err := state.ACLIdentityProviderGetByName(nil, rule.IDPName)
+	if err != nil {
+		return fmt.Errorf("acl identity provider lookup failed: %v", err)
+	} else if idp == nil {
+		return fmt.Errorf("cannot find identity provider with name %q", rule.IDPName)
 	}
 
 	for _, match := range rule.Matches {
@@ -1856,14 +1866,6 @@ func (a *ACL) IdentityProviderSet(args *structs.ACLIdentityProviderSetRequest, r
 		return fmt.Errorf("Invalid Identity provider: invalid Name. Only alphanumeric characters, '-' and '_' are allowed")
 	}
 
-	if idp.Type != "kubernetes" {
-		return fmt.Errorf("Invalid Identity Provider: Type should be one of [kubernetes]")
-	}
-
-	if err := a.srv.validateIdentityProviderSpecificFields(idp); err != nil {
-		return fmt.Errorf("Invalid Identity Provider: %v", err)
-	}
-
 	// Check to see if the idp exists first.
 	_, existing, err := state.ACLIdentityProviderGetByName(nil, idp.Name)
 	if err != nil {
@@ -1871,9 +1873,19 @@ func (a *ACL) IdentityProviderSet(args *structs.ACLIdentityProviderSetRequest, r
 	}
 
 	if existing != nil {
-		if existing.Type != idp.Type {
+		if idp.Type == "" {
+			idp.Type = existing.Type
+		} else if existing.Type != idp.Type {
 			return fmt.Errorf("the Type field of an Identity Provider is immutable")
 		}
+	}
+
+	if idp.Type != "kubernetes" {
+		return fmt.Errorf("Invalid Identity Provider: Type should be one of [kubernetes]")
+	}
+
+	if err := a.srv.validateIdentityProviderSpecificFields(idp); err != nil {
+		return fmt.Errorf("Invalid Identity Provider: %v", err)
 	}
 
 	req := &structs.ACLIdentityProviderBatchSetRequest{
